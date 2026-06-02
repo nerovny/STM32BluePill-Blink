@@ -1,3 +1,12 @@
+/**
+  ******************************************************************************
+  * @file     STM32Blink
+  * @author   A. Nerovny
+  * @brief    Working STM32 BluePill PlatformIO "Blink" project template using HAL.
+              Toggles onboard PC13 LED on and off.
+  ******************************************************************************
+  */
+
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx.h"
 
@@ -17,13 +26,10 @@ int main(void)
   
   GPIO_InitTypeDef GPIO_InitStruct;
   GPIO_InitStruct.Pin = LED_PIN;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP; // Push-pull mode
+  GPIO_InitStruct.Pull = GPIO_NOPULL; // No pullup or pulldown
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(LED_GPIO_PORT, &GPIO_InitStruct); 
-
-  // Configure GPIO pin Output Level
-  HAL_GPIO_WritePin(LED_GPIO_PORT, LED_PIN, GPIO_PIN_RESET);
 
   while (1)
   {
@@ -63,6 +69,7 @@ void SystemClock_Config(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
+  //Configure the SysTick frequency, clock source and interrupt priority
   HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
   HAL_NVIC_SetPriority(SysTick_IRQn, 15, 0);
@@ -72,47 +79,8 @@ void _Error_Handler(const char* file, int line) {
 	//Error occured.
 }
 
-/* We must hook the systick in order for HAL_Delay to work. */
+// We must hook the SysTick in order for HAL_Delay to work
 extern "C" void SysTick_Handler(void)
 {
 	HAL_IncTick();
-  //osSystickHandler(); For FREERTOS stuff
-}
-
-void NMI_Handler(void)
-{
-}
-
-void HardFault_Handler(void)
-{
-  while (1) {}
-}
-
-
-void MemManage_Handler(void)
-{
-  while (1) {}
-}
-
-void BusFault_Handler(void)
-{
-  while (1) {}
-}
-
-void UsageFault_Handler(void)
-{
-  while (1) {}
-}
-
-void SVC_Handler(void)
-{
-}
-
-
-void DebugMon_Handler(void)
-{
-}
-
-void PendSV_Handler(void)
-{
 }
